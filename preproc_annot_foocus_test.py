@@ -1,5 +1,5 @@
 
-from config import get_cfg_defaults
+from config_foocus import get_cfg_defaults
 import warnings
 import numpy as np
 import argparse
@@ -19,8 +19,6 @@ def save_annots(save_file_path, preprocessed_annots, keys):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--subset', type=int, default=6,
-                        help='Subset number(defalut: 6)')
     parser.add_argument('--cfg', dest='cfg_file',
                         help='Path to config file', default=None, type=str)
     args = parser.parse_args()
@@ -31,7 +29,7 @@ def main():
 
         # Load annot file
     annots = []
-    with open(cfg.ANNOT_FILE, 'r') as f:
+    with open("foocus_dataset\\foocus_dataset_training_set_annotation.txt", 'r') as f:
         for line in f:
             elems = line.rstrip().split()
             annots.append(elems)
@@ -44,10 +42,8 @@ def main():
     for annot in annots:
         img_name, cls_name = annot[0], annot[1]
         cls_idx = cfg.CLASS_NAMES.index(cls_name)
-        subset = int(annot[2])
-        if subset != args.subset:
-            continue
-        x1, y1, x2, y2 = list(map(int, annot[3:]))
+        
+        x1, y1, x2, y2 = list(map(int, annot[2:]))
         w, h = (x2 - x1), (y2 - y1)
         if w == 0 or h == 0:
             print('Skip with size 0:', img_name)
@@ -60,7 +56,7 @@ def main():
     preprocessed_annots_keys = list(preprocessed_annots.keys())
     np.random.shuffle(preprocessed_annots_keys)
     num_train = int(len(preprocessed_annots) * 0.8)
-    save_annots(cfg.CROPPED_ANNOT_FILE, preprocessed_annots,
+    save_annots(cfg.CROPPED_ANNOT_FILE_TEST, preprocessed_annots,
                 preprocessed_annots_keys[:num_train + num_train:])
     # save_annots(cfg.CROPPED_ANNOT_FILE, preprocessed_annots,
     #             preprocessed_annots_keys[:num_train])

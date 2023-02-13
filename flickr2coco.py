@@ -4,7 +4,7 @@ from collections import OrderedDict, defaultdict
 import cv2
 import os
 
-from config import get_cfg_defaults
+from config_foocus import get_cfg_defaults
 
 
 def info():
